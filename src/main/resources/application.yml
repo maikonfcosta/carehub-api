@@ -2,9 +2,9 @@ spring:
   # Configurações Padrão (Usadas localmente se nenhum profile estiver ativo)
   datasource:
     # Use as configurações do localhost como fallback
-    url: jdbc:postgresql://localhost:5432/carehub_db
-    username: postgres
-    password: CareHub2025
+    url: postgresql://admin:OcL8T8iDAzMUufmaMvq1ezaiQIJg58jp@dpg-d4eav0euk2gs739ek7vg-a.oregon-postgres.render.com/carehub_bd
+    username: admin
+    password: OcL8T8iDAzMUufmaMvq1ezaiQIJg58jp
     driver-class-name: org.postgresql.Driver
 
   jpa:
