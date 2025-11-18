@@ -1,0 +1,39 @@
+spring:
+  # Configurações Padrão (Usadas localmente se nenhum profile estiver ativo)
+  datasource:
+    # Use as configurações do localhost como fallback
+    url: jdbc:postgresql://localhost:5432/carehub_db
+    username: postgres
+    password: CareHub2025
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update # Mantemos 'update' em desenvolvimento
+    show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+
+  # Configurações do Profile de PRODUÇÃO (Ativado no Render.com)
+---
+spring:
+  config:
+    activate:
+      on-profile: prod # Define o profile como 'prod'
+  datasource:
+    # O Render injetará a URL do banco de dados de produção nesta variável
+    url: ${DB_URL}
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      # MUITO IMPORTANTE: Em produção, o 'ddl-auto' deve ser 'validate' ou 'none'
+      # para evitar que o Hibernate tente alterar o esquema do DB automaticamente.
+      ddl-auto: validate
+    show-sql: false # Esconde o SQL no console de produção
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
