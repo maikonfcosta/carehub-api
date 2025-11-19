@@ -14,8 +14,9 @@ public class WebConfig implements WebMvcConfigurer {
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
+        // 🚨 CONFIGURAÇÃO FINAL PARA AMBIENTE DE DEPLOY E LOCAL 🚨
         registry.addMapping("/api/**") // Libera todos os endpoints que começam com /api
-                .allowedOrigins("http://localhost:5173") // O endereço onde o seu Front-end React está rodando
+                .allowedOrigins("*") // ⬅️ Permite qualquer origem (Para Vercel, Render e Local)
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Tipos de métodos HTTP permitidos
                 .allowedHeaders("*"); // Permite todos os cabeçalhos
     }
