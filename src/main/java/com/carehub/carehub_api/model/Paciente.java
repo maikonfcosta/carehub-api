@@ -33,6 +33,19 @@ public class Paciente {
     @Column(nullable = false, length = 100)
     private String email;
 
-    // TODO: Adicionar campos de endereço (rua, cep, cidade, etc.) que podem ser integrados com a ViaCEP API depois.
+    @Column(length = 10)
     private String cep;
+
+    // 🚨 NOVOS CAMPOS DE ENDEREÇO 🚨
+    @Column(length = 100)
+    private String logradouro; // Rua/Avenida
+
+    @Column(length = 100)
+    private String bairro;
+
+    @Column(length = 100)
+    private String localidade; // Cidade
+
+    @Column(length = 2)
+    private String uf;         // Estado
 }
