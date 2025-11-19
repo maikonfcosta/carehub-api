@@ -20,18 +20,21 @@ spring:
 spring:
   config:
     activate:
-      on-profile: prod # Define o profile como 'prod'
+      on-profile: prod
+
+  # 🚨 Mude a injeção para o formato de "propriedades" dentro do bloco do perfil
   datasource:
-    # O Render injetará a URL do banco de dados de produção nesta variável
+    # A URL está sendo injetada, mas pode precisar dos campos user/pass fora da URL
     url: ${DATABASE_URL}
+    # ADICIONE estas linhas de injeção, mesmo que a URL já contenha os dados.
+    # Isso é necessário porque o Spring Boot precisa dos campos de usuário e senha separados
+    # para usar o pool de conexões (HikariCP).
     username: ${DB_USERNAME}
     password: ${DB_PASSWORD}
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
-      # MUITO IMPORTANTE: Em produção, o 'ddl-auto' deve ser 'validate' ou 'none'
-      # para evitar que o Hibernate tente alterar o esquema do DB automaticamente.
       ddl-auto: validate
     show-sql: false # Esconde o SQL no console de produção
     properties:
