@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -42,5 +43,26 @@ public class PacienteController {
     public ResponseEntity<Paciente> buscarPorId(@PathVariable Long id) {
         Paciente paciente = pacienteService.buscarPorId(id);
         return ResponseEntity.ok(paciente);
+    }
+
+    /**
+     * NOVO: Atualiza um paciente existente.
+     * PUT /api/pacientes/{id}
+     */
+    @PutMapping("/{id}")
+    public ResponseEntity<Paciente> atualizarPaciente(@PathVariable Long id, @RequestBody Paciente pacienteDetalhes) {
+        Paciente pacienteAtualizado = pacienteService.atualizar(id, pacienteDetalhes);
+        return ResponseEntity.ok(pacienteAtualizado);
+    }
+
+    /**
+     * NOVO: Exclui um paciente pelo ID.
+     * DELETE /api/pacientes/{id}
+     */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirPaciente(@PathVariable Long id) {
+        pacienteService.excluir(id);
+        // Retorna status 204 No Content, que indica sucesso na exclusão.
+        return ResponseEntity.noContent().build();
     }
 }

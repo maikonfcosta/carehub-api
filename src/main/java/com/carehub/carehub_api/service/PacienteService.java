@@ -23,4 +23,9 @@ public interface PacienteService {
      * Busca um paciente pelo seu identificador único.
      */
     Paciente buscarPorId(Long id);
+
+    Paciente atualizar(Long id, Paciente pacienteDetalhes);
+
+    void excluir(Long id);
+
 }
