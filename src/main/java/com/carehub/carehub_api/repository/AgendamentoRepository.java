@@ -23,4 +23,5 @@ public interface AgendamentoRepository extends JpaRepository<Agendamento, Long> 
      * Consulta para buscar agendamentos por médico (útil para a agenda do médico)
      */
     List<Agendamento> findByMedicoOrderByDataHoraAsc(Medico medico);
+    List<Agendamento> findByDataHoraBetween(LocalDateTime start, LocalDateTime end);
 }
