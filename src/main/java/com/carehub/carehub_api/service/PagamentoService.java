@@ -19,7 +19,7 @@ import java.util.Map;
 @Service
 public class PagamentoService {
 
-    @Value("${STRIPE_SECRET_KEY}") // ⬅️ LÊ A VARIÁVEL DE AMBIENTE DO RENDER
+    @Value("sk_test_51SVCseHZBPFpwjMvbZhnyhtjO278ApB4SFaNM72diqkd2PPLkMHfnlfoAOhttFRk3RmHVxdpHtWkTCrgMcIAzSOM00j4WDC05U") // ⬅️ LÊ A VARIÁVEL DE AMBIENTE DO RENDER
     private String stripeSecretKey;
 
     @Autowired
