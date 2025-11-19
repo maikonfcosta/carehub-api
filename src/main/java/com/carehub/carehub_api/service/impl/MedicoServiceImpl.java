@@ -27,21 +27,21 @@ public class MedicoServiceImpl {
     }
 
     /**
-     * NOVO: Atualiza um médico existente.
+     * Atualiza um médico existente (PUT).
      */
     public Medico atualizar(Long id, Medico medicoDetalhes) {
         // 1. Busca o médico pelo ID
         Medico medicoExistente = medicoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Médico não encontrado para atualização."));
 
-        // 2. Validação de CRM
+        // 2. Validação de CRM (se o CRM for alterado e já existir em outro médico)
         Medico medicoComCrmIgual = medicoRepository.findByCrm(medicoDetalhes.getCrm());
 
         if (medicoComCrmIgual != null && !medicoComCrmIgual.getId().equals(medicoExistente.getId())) {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "CRM já cadastrado em outro médico.");
         }
 
-        // 3. Copia as novas propriedades para a entidade existente
+        // 3. Copia as novas propriedades para a entidade existente (exclui o ID da cópia)
         BeanUtils.copyProperties(medicoDetalhes, medicoExistente, "id");
 
         // 4. Salva (atualiza) a entidade
@@ -49,13 +49,12 @@ public class MedicoServiceImpl {
     }
 
     /**
-     * NOVO: Exclui um médico pelo ID.
+     * Exclui um médico pelo ID (DELETE).
      */
     public void excluir(Long id) {
         Medico medicoExistente = medicoRepository.findById(id)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Médico não encontrado para exclusão."));
 
-        // Lógica: Exclui o médico
         medicoRepository.delete(medicoExistente);
     }
 

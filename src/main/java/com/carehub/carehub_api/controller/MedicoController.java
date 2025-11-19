@@ -34,7 +34,7 @@ public class MedicoController {
     }
 
     /**
-     * NOVO: Atualiza um médico existente.
+     * Atualiza um médico existente.
      * PUT /api/medicos/{id}
      */
     @PutMapping("/{id}")
@@ -44,7 +44,7 @@ public class MedicoController {
     }
 
     /**
-     * NOVO: Exclui um médico pelo ID.
+     * Exclui um médico pelo ID.
      * DELETE /api/medicos/{id}
      */
     @DeleteMapping("/{id}")
