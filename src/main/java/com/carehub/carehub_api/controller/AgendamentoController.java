@@ -44,24 +44,17 @@ public class AgendamentoController {
      * GET /api/agendamentos
      */
     @GetMapping
-    public List<Agendamento> listarTodos() {
-        return agendamentoService.buscarTodos();
-    }
-
-    @GetMapping
     public List<Agendamento> listarTodos(@RequestParam(required = false) String data) {
         if (data != null && !data.isEmpty()) {
             try {
-                // Converte a string YYYY-MM-DD para um intervalo de tempo (início e fim do dia)
+                // Lógica de filtro (que já implementamos)
                 LocalDate dataBusca = LocalDate.parse(data);
                 LocalDateTime inicioDia = dataBusca.atStartOfDay();
                 LocalDateTime fimDia = dataBusca.atTime(LocalTime.MAX);
 
-                // Retorna a busca filtrada
                 return agendamentoRepository.findByDataHoraBetween(inicioDia, fimDia);
 
             } catch (Exception e) {
-                // Erro de parsing (Ex: data inválida)
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Formato de data inválido. Use YYYY-MM-DD.");
             }
         }
