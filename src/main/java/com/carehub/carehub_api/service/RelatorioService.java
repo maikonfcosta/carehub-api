@@ -1,48 +1,43 @@
 package com.carehub.carehub_api.service;
 
 import com.carehub.carehub_api.dto.PagamentoRelatorioDTO;
+import com.carehub.carehub_api.model.Transacao;
+import com.carehub.carehub_api.repository.TransacaoRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RelatorioService {
 
+    @Autowired
+    private TransacaoRepository transacaoRepository; // ⬅️ Injeta o repositório real
+
     /**
-     * SIMULAÇÃO: Retorna uma lista mockada de pagamentos para fins de relatório.
-     * Em produção, buscaria os dados de pagamentos na sua tabela de Transações ou no log do Stripe.
+     * BUSCA REAL: Retorna o histórico de pagamentos lendo a tabela Transacoes.
      */
     public List<PagamentoRelatorioDTO> getHistoricoPagamentos() {
-        // Mock de dados transacionais
-        PagamentoRelatorioDTO p1 = new PagamentoRelatorioDTO();
-        p1.setId(1L);
-        p1.setAgendamentoId(101L);
-        p1.setPacienteNome("Lucas Palma Monteiro");
-        p1.setDataTransacao(LocalDateTime.of(2025, 11, 15, 10, 30));
-        p1.setValor(150.00);
-        p1.setStatus("Pago");
-        p1.setTransacaoId("ch_123ABC_TEST_PAGO");
+        // Busca todas as transações salvas no DB
+        List<Transacao> transacoes = transacaoRepository.findAll();
 
-        PagamentoRelatorioDTO p2 = new PagamentoRelatorioDTO();
-        p2.setId(2L);
-        p2.setAgendamentoId(102L);
-        p2.setPacienteNome("Maikon Felipe Costa");
-        p2.setDataTransacao(LocalDateTime.of(2025, 11, 14, 14, 0));
-        p2.setValor(150.00);
-        p2.setStatus("Pago");
-        p2.setTransacaoId("ch_456DEF_TEST_PAGO");
+        // Mapeia as entidades Transacao para o DTO de Relatório
+        return transacoes.stream()
+                .map(transacao -> {
+                    PagamentoRelatorioDTO dto = new PagamentoRelatorioDTO();
+                    dto.setId(transacao.getId());
 
-        PagamentoRelatorioDTO p3 = new PagamentoRelatorioDTO();
-        p3.setId(3L);
-        p3.setAgendamentoId(103L);
-        p3.setPacienteNome("Kevin Rafael de Moraes");
-        p3.setDataTransacao(LocalDateTime.of(2025, 11, 18, 9, 0));
-        p3.setValor(50.00);
-        p3.setStatus("Recusado");
-        p3.setTransacaoId("ch_789GHI_TEST_RECUSADO");
+                    // 🚨 Acesso aos dados do Agendamento e Paciente via relacionamento (Lazy/Eager Loading)
+                    dto.setAgendamentoId(transacao.getAgendamento().getId());
+                    dto.setPacienteNome(transacao.getAgendamento().getPaciente().getNomeCompleto());
 
-        return Arrays.asList(p1, p2, p3);
+                    dto.setDataTransacao(transacao.getDataTransacao());
+                    dto.setValor(transacao.getValor());
+                    dto.setStatus(transacao.getStatus());
+                    dto.setTransacaoId(transacao.getTransacaoId());
+                    return dto;
+                })
+                .collect(Collectors.toList());
     }
 }
