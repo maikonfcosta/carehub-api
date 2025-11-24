@@ -37,7 +37,7 @@ A API estará disponível em ```http://localhost:8080```.
 | Recurso | Método | Descrição | Status de Segurança |
 | :--- | :--- | :--- | :--- |
 | /api/pacientes | CRUD | Gerenciamento completo de pacientes (CRUD). | Protegido (Token) | 
-| /api/medicos | CRUD Gerenciamento completo de médicos (CRUD). Protegido (Token) |
+| /api/medicos | CRUD | Gerenciamento completo de médicos (CRUD). | Protegido (Token) |
 | /api/agendamentos | POST/GET | Agendamento e listagem de consultas (Bloqueio de Horário). | Protegido (Token)| 
 | /api/pagamentos/processar | POST | Processa cobrança via token Stripe. | Protegido (Token) |
 | /api/relatorios/pagamentos | GET | Histórico de transações salvas. | Protegido (Token) |
@@ -48,3 +48,7 @@ A API estará disponível em ```http://localhost:8080```.
 - **Fluxo de Autenticação:** Acesso liberado apenas se o cabeçalho ```Authorization: Bearer <token>``` for validado com sucesso pelo Firebase Admin SDK.
 
 - **Variáveis Críticas (Render):** O deploy exige as variáveis secretas ```DATABASE_URL```, ```STRIPE_SECRET_KEY``` e ```FIREBASE_CREDENTIALS``` injetadas no ambiente do contêiner.
+
+## ⚖️ Licença
+
+Este projeto está licenciado sob os termos da **Licença MIT**. Para mais detalhes, consulte o arquivo [LICENSE.md] na raiz do repositório.
