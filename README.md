@@ -2,67 +2,49 @@
 
 Serviço de Back-end responsável pela lógica de negócio, persistência de dados (PostgreSQL) e exposição dos endpoints REST para o Front-end.
 
-## ⚙️ Tecnologias Principais
+## ⚙️ Arquitetura e Tecnologias
 
 | Componente | Tecnologia | Versão Principal |
 | :--- | :--- | :--- |
 | **Framework** | **Spring Boot** | 3.5.7 |
 | **Linguagem** | **Java** | 21 (LTS) |
+| **Segurança** | **Spring Security** | 6.x |
+| **Autenticação** | **Firebase Admin SDK (JWT)** | 9.3.0 |
 | **Banco de Dados** | **PostgreSQL** | 12+ |
-| **Dependências ORM** | Spring Data JPA / Hibernate | 6.x |
-| **Build Tool** | **Maven** | 3.x |
+| **Pagamentos** | **Stripe Java SDK** | 25.x |
 | **Deploy** | **Render.com** (via Docker) | - |
 
 ## 🚀 Como Rodar Localmente (Desenvolvimento)
 
-Certifique-se de ter o **JDK 21** e o **PostgreSQL** instalados e em execução na porta padrão (`5432`).
+### 1. Configuração de Variáveis Locais
 
-### 1. Configuração do Banco de Dados
+Para iniciar localmente, defina a chave secreta do Stripe e as credenciais do DB no seu ambiente de execução ou `application.yml` (no perfil `default`).
 
-Crie um banco de dados vazio no seu servidor PostgreSQL local (ex: `carehub_db`).
+> **Atenção:** A chave `FIREBASE_CREDENTIALS` deve ser injetada no ambiente local (IDE) como um JSON completo.
 
-### 2. Configuração do Arquivo de Recursos
+### 2. Execução
 
-Ajuste o arquivo `src/main/resources/application.yml` com suas credenciais de desenvolvimento local:
-
-# Bloco Padrão (Desenvolvimento Local)
-```yaml
-spring:
-  datasource:
-    url: jdbc:postgresql://localhost:5432/carehub_db
-    username: [SEU_USUARIO_LOCAL]
-    password: [SUA_SENHA_LOCAL]
-  jpa:
-    hibernate:
-      ddl-auto: update # Cria/atualiza as tabelas automaticamente em desenvolvimento
-```
-
-### 3. ExecuçãoUse sua IDE (IntelliJ, VS Code) 
-para rodar a classe principal (CarehubApiApplication) ou use o Maven:
+Use sua IDE ou o Maven:
 
 ```bash
 mvn spring-boot:run
 ```
 
-A API estará disponível em ```http://localhost:8080.```
+A API estará disponível em ```http://localhost:8080```.
 
 ## 🌐 Endpoints Principais
 
-| Recurso | Método | Descrição |
-| :--- | :--- | :--- |
-| ```/api/pacientes``` | ```POST``` | Cadastra um novo paciente. |
-| ```/api/medicos``` | ```POST``` | Cadastra um novo médico (validação de CRM único). |
-| ```/api/agendamentos``` | ```POST``` | Agenda uma nova consulta (validação de conflito de horário). |
-| ```/api/cep/{cep}``` | ```GET``` | **NOVO:** Consulta endereço completo via ViaCEP. |
+| Recurso | Método | Descrição | Status de Segurança |
+| :--- | :--- | :--- | :--- |
+| /api/pacientes | CRUD | Gerenciamento completo de pacientes (CRUD). | Protegido (Token) | 
+| /api/medicos | CRUD Gerenciamento completo de médicos (CRUD). Protegido (Token) |
+| /api/agendamentos | POST/GET | Agendamento e listagem de consultas (Bloqueio de Horário). | Protegido (Token)| 
+| /api/pagamentos/processar | POST | Processa cobrança via token Stripe. | Protegido (Token) |
+| /api/relatorios/pagamentos | GET | Histórico de transações salvas. | Protegido (Token) |
+| /api/cep/{cep} | GET | Consulta endereço ViaCEP. | Público (permitAll) |
 
-## ☁️ Deploy e Variáveis de Produção (Render)
 
-O deploy é feito via **Docker** no **Render.com**, ativando o perfil prod.
+## 🔒 Segurança e Deploy
+- **Fluxo de Autenticação:** Acesso liberado apenas se o cabeçalho ```Authorization: Bearer <token>``` for validado com sucesso pelo Firebase Admin SDK.
 
-**Variáveis de Ambiente (Web Service/Container:**
-
-| Variável | Valor | Uso |
-| :--- | :--- | :--- |
-| ```DATABASE_URL``` | URL JDBC completa do Render DB | Conexão do Spring Boot. |
-| ```DB_USERNAME``` | Usuário do DB de Produção | Usado pelo pool de conexões. |
-| ```DB_PASSWORD``` | Senha do DB de Produção | Usado pelo pool de conexões. |
+- **Variáveis Críticas (Render):** O deploy exige as variáveis secretas ```DATABASE_URL```, ```STRIPE_SECRET_KEY``` e ```FIREBASE_CREDENTIALS``` injetadas no ambiente do contêiner.
