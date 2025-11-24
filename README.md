@@ -37,7 +37,7 @@ A API estará disponível em ```http://localhost:8080```.
 | Recurso | Método | Descrição | Status de Segurança |
 | :--- | :--- | :--- | :--- |
 | /api/pacientes | CRUD | Gerenciamento completo de pacientes (CRUD). | Protegido (Token) | 
-| /api/medicos | CRUD Gerenciamento completo de médicos (CRUD). Protegido (Token) |
+| /api/medicos | CRUD | Gerenciamento completo de médicos (CRUD). | Protegido (Token) |
 | /api/agendamentos | POST/GET | Agendamento e listagem de consultas (Bloqueio de Horário). | Protegido (Token)| 
 | /api/pagamentos/processar | POST | Processa cobrança via token Stripe. | Protegido (Token) |
 | /api/relatorios/pagamentos | GET | Histórico de transações salvas. | Protegido (Token) |
